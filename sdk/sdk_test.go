@@ -7,8 +7,8 @@ import (
 )
 
 func TestLogin(t *testing.T) {
-	Host = "http://10.160.57.80:8080"
-	response, err := Login("admin", "openstack1")
+	Host = "http://localhost"
+	response, err := Login("admin", "admin")
 
 	if err != nil {
 		t.Error(err)
