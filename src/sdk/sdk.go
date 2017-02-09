@@ -29,3 +29,19 @@ func Login(username string, password string) (*http.Response, error) {
 
 	return client.Do(request)
 }
+
+func CreateInstance() {
+
+}
+
+func StopInstance() {
+
+}
+
+func StartInstance() {
+
+}
+
+func RestartInstance() {
+	
+}

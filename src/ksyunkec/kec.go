@@ -1,4 +1,4 @@
-package kec
+package ksyunkec
 
 import (
 	"crypto/md5"
@@ -11,19 +11,14 @@ import (
 	"io"
 )
 
+var (
+	dockerPort = 2376
+	swarmPort  = 3376
+)
+
 const (
-	driverName               = "aliyunecs"
-	defaultRegion            = "cn-hangzhou"
-	defaultInstanceType      = "ecs.t1.small"
-	defaultRootSize          = 20
-	internetChargeType       = "PayByTraffic"
-	ipRange                  = "0.0.0.0/0"
-	machineSecurityGroupName = "docker-machine"
-	vpcCidrBlock             = "10.0.0.0/8"
-	vSwitchCidrBlock         = "10.1.0.0/24"
-	timeout                  = 300
-	defaultSSHUser           = "root"
-	maxRetry                 = 20
+	driverName     = "ksyunkec"
+	defaultSSHUser = "root"
 )
 
 type Driver struct {
@@ -62,8 +57,7 @@ func (d *Driver) Create() error {
 
 // DriverName returns the name of the driver
 func (d *Driver) DriverName() string {
-
-	return nil
+	return driverName
 }
 
 // GetCreateFlags returns the mcnflag.Flag slice representing the flags
@@ -82,8 +76,7 @@ func (d *Driver) GetIP() (string, error) {
 
 // GetMachineName returns the name of the machine
 func (d *Driver) GetMachineName() string {
-
-	return nil
+	return d.MachineName
 }
 
 // GetSSHHostname returns hostname for use with ssh
@@ -94,27 +87,40 @@ func (d *Driver) GetSSHHostname() (string, error) {
 
 // GetSSHKeyPath returns key path for use with ssh
 func (d *Driver) GetSSHKeyPath() string {
-
-	return nil
+	if d.SSHKeyPath == "" {
+		d.SSHKeyPath = d.ResolveStorePath("id_rsa")
+	}
+	return d.SSHKeyPath
 }
 
 // GetSSHPort returns port for use with ssh
 func (d *Driver) GetSSHPort() (int, error) {
+	if d.SSHPort == 0 {
+		d.SSHPort = drivers.DefaultSSHPort
+	}
 
-	return nil, nil
+	return d.SSHPort, nil
 }
 
 // GetSSHUsername returns username for use with ssh
 func (d *Driver) GetSSHUsername() string {
-
-	return nil
+	if d.SSHUser == "" {
+		d.SSHUser = drivers.DefaultSSHUser
+	}
+	return d.SSHUser
 }
 
 // GetURL returns a Docker compatible host URL for connecting to this host
 // e.g. tcp://1.2.3.4:2376
 func (d *Driver) GetURL() (string, error) {
-
-	return nil, nil
+	ip, err := d.GetIP()
+	if err != nil {
+		return "", err
+	}
+	if ip == "" {
+		return "", nil
+	}
+	return fmt.Sprintf("tcp://%s:%d", ip, dockerPort), nil
 }
 
 // GetState returns the state that the host is in (running, stopped, etc)
@@ -125,7 +131,12 @@ func (d *Driver) GetState() (state.State, error) {
 
 // Kill stops a host forcefully
 func (d *Driver) Kill() error {
+	log.Debugf("%s | Killing instance ...", d.MachineName)
 
+	//TODO send stop vm http request.
+	//if err := d.getClient().StopInstance(d.InstanceId, true); err != nil {
+	//	return fmt.Errorf("%s | Unable to kill instance %s: %s", d.MachineName, d.InstanceId, err)
+	//}
 	return nil
 }
 

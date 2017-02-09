@@ -1,0 +1,39 @@
+hash: 3441bf6ff6d443d7e65fcdfc4f1d1b67e506cee012ed3b4901bbe2aab9890aa9
+updated: 2017-02-08T23:20:55.333263994+08:00
+imports:
+- name: github.com/denverdino/aliyungo
+  version: 5b4f72bfcf17a2e6ec8238708bd161a2413e97e6
+  subpackages:
+  - common
+  - ecs
+  - slb
+  - util
+- name: github.com/docker/docker
+  version: a8a31eff10544860d2188dddabdee4d727545796
+  subpackages:
+  - pkg/term
+- name: github.com/docker/machine
+  version: 926d5747141eac9f97d22475f5c483f584c290c9
+  subpackages:
+  - libmachine/drivers
+  - libmachine/drivers/plugin
+  - libmachine/drivers/plugin/localbinary
+  - libmachine/drivers/rpc
+  - libmachine/log
+  - libmachine/mcnflag
+  - libmachine/mcnutils
+  - libmachine/ssh
+  - libmachine/state
+  - libmachine/version
+  - version
+- name: github.com/miaowing/docker-machine-driver-ksyun
+  version: d67bd45dab4f1ae2598f378bacceb41e348b170b
+  subpackages:
+  - kec
+- name: golang.org/x/crypto
+  version: beef0f4390813b96e8e68fd78570396d0f4751fc
+  subpackages:
+  - curve25519
+  - ssh
+  - ssh/terminal
+testImports: []
