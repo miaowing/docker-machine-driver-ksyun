@@ -1,4 +1,4 @@
-package main2
+package main
 
 import (
 	"github.com/docker/machine/libmachine/drivers/plugin"
@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	plugin.RegisterDriver(kec.NewDriver("", ""))
+	plugin.RegisterDriver(ksyunkec.NewDriver("", ""))
 }

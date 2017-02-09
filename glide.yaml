@@ -1,2 +1,5 @@
 package: .
-import: []
+import:
+- package: github.com/miaowing/docker-machine-driver-ksyun
+  subpackages:
+  - src/ksyunkec

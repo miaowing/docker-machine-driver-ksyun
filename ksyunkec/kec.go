@@ -17,13 +17,31 @@ var (
 )
 
 const (
-	driverName     = "ksyunkec"
-	defaultSSHUser = "root"
+	driverName          = "ksyunkec"
+	defaultSSHUser      = "root"
+	defaultInstanceType = "I1.1A"
 )
 
 type Driver struct {
 	*drivers.BaseDriver
-	Id string
+	InstanceId         string
+	Id                 string
+	AccessKey          string
+	SecretKey          string
+	ImageId            string
+	InstanceType       string
+	DataDiskGb         int
+	MaxCount           string
+	MinCount           string
+	SubnetId           string
+	InstancePassword   string
+	ChargeType         string
+	PurchaseTime       string
+	SecurityGroupId    string
+	PrivateIpAddress   string
+	InstanceName       string
+	InstanceNameSuffix string
+	SriovNetSupport    bool
 }
 
 func NewDriver(hostName, storePath string) drivers.Driver {
@@ -63,8 +81,76 @@ func (d *Driver) DriverName() string {
 // GetCreateFlags returns the mcnflag.Flag slice representing the flags
 // that can be set, their descriptions and defaults.
 func (d *Driver) GetCreateFlags() []mcnflag.Flag {
-
-	return nil
+	return []mcnflag.Flag{
+		mcnflag.StringFlag{
+			Name:   "ksyunkec-access-key-id",
+			Usage:  "KEC Access Key ID",
+			Value:  "",
+			EnvVar: "KEC_ACCESS_KEY_ID",
+		},
+		mcnflag.StringFlag{
+			Name:   "ksyunkec-access-key-secret",
+			Usage:  "KEC Access Key Secret",
+			Value:  "",
+			EnvVar: "KEC_ACCESS_KEY_SECRET",
+		},
+		mcnflag.StringFlag{
+			Name:   "ksyunkec-image-id",
+			Usage:  "KEC machine image",
+			EnvVar: "KEC_IMAGE_ID",
+		},
+		mcnflag.StringFlag{
+			Name:   "ksyunkec-instance-type",
+			Usage:  "KEC instance type",
+			Value:  defaultInstanceType,
+			EnvVar: "KEC_INSTANCE_TYPE",
+		},
+		mcnflag.IntFlag{
+			Name:   "ksyunkec-disk-size",
+			Usage:  "Data disk size for instance in GB",
+			Value:  0,
+			EnvVar: "KEC_DISK_SIZE",
+		},
+		mcnflag.StringFlag{
+			Name:   "ksyunkec-subnet-id",
+			Usage:  "Subnet id for instance association",
+			EnvVar: "KEC_SUBNET_ID",
+		},
+		mcnflag.StringFlag{
+			Name:   "ksyunkec-ssh-password",
+			Usage:  "set the password of the ssh user",
+			EnvVar: "KEC_SSH_PASSWORD",
+		},
+		mcnflag.StringFlag{
+			Name:   "ksyunkec-charge-type",
+			Usage:  "set the charge type of instance",
+			Value:  "Monthly",
+			EnvVar: "KEC_CHARGE_TYPE",
+		},
+		mcnflag.IntFlag{
+			Name:   "ksyunkec-purchase-time",
+			Usage:  "set the purchase time of instance",
+			Value:  0,
+			EnvVar: "KEC_PURCHASE_TIME",
+		},
+		mcnflag.StringFlag{
+			Name:   "ksyunkec-security-group",
+			Usage:  "KEC security group",
+			EnvVar: "KEC_SECURITY_GROUP",
+		},
+		mcnflag.StringFlag{
+			Name:   "ksyunkec-private-ip",
+			Usage:  "KEC instance private IP",
+			Value:  "",
+			EnvVar: "KEC_PRIVATE_IP",
+		},
+		mcnflag.StringFlag{
+			Name:   "ksyunkec-instance-name",
+			Usage:  "Name for instance",
+			Value:  "",
+			EnvVar: "KEC_INSTANCE_NAME",
+		},
+	}
 }
 
 // GetIP returns an IP or hostname that this host is available at
@@ -162,7 +248,20 @@ func (d *Driver) Restart() error {
 // SetConfigFromFlags configures the driver with the object that was returned
 // by RegisterCreateFlags
 func (d *Driver) SetConfigFromFlags(opts drivers.DriverOptions) error {
-
+	d.AccessKey = opts.String("ksyunkec-access-key-id")
+	d.SecretKey = opts.String("ksyunkec-access-key-secret")
+	d.ImageId = opts.String("ksyunkec-image-id")
+	d.InstanceType = opts.String("ksyunkec-instance-type")
+	d.DataDiskGb = opts.Int("ksyunkec-disk-size")
+	d.SubnetId = opts.String("ksyunkec-subnet-id")
+	d.InstancePassword = opts.String("ksyunkec-ssh-password")
+	d.ChargeType = opts.String("ksyunkec-charge-type")
+	d.PurchaseTime = opts.String("ksyunkec-purchase-time")
+	d.SecurityGroupId = opts.String("ksyunkec-security-group")
+	d.PrivateIpAddress = opts.String("ksyunkec-private-ip")
+	d.InstanceName = opts.String("ksyunkec-instance-name")
+	d.InstanceNameSuffix = ""
+	d.SriovNetSupport = false
 	return nil
 }
 
